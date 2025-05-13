@@ -1,0 +1,190 @@
+{
+  name: "dvi_in"
+  clock_primary: "sys_clk"
+  bus_device: "tlul"
+  regwidth: "32"
+  registers: [
+    {
+      multireg: {
+        name: "reg_pipeline_debug",
+        desc: "input pipeline debug register",
+        count: 3,
+        cname: "channel",
+        swaccess: "ro",
+        hwaccess: "hwo",
+        resval: 0,
+        fields: [
+          {bits: "0", name: "valid", desc: "1 if the decoder is in sync"},
+          {bits: "5:1", name: "delay", desc: "the delay value found for the IDELAY primitive"},
+          {bits: "31:6", name: "quality", desc: "the signal quality as measured for the purpose of adjusting the delay"}
+        ]
+      }
+    },
+    {
+      multireg: {
+        name: "reg_tmds_debug",
+        desc: "tmds decoder debug register",
+        count: 3,
+        cname: "channel",
+        swaccess: "ro",
+        hwaccess: "hwo",
+        resval: 0,
+        fields: [
+          {bits: "9:0", name: "last_valid", desc: "last valid tmds symbol"},
+          {bits: "19:10", name: "last_invalid", desc: "last invalid tmds symbol"},
+        ]
+      }
+    },
+    {
+      name: "reg_pipeline_debug_pixel",
+      desc: "input pipeline pixel debug register",
+      swaccess: "ro",
+      hwaccess: "hwo",
+      resval: 0,
+      fields: [
+        {bits: "7:0", name: "red", desc: "red value of the last read pixel"},
+        {bits: "15:8", name: "green", desc: "green value of the last read pixel"},
+        {bits: "23:16", name: "blue", desc: "blue value of the last read pixel"}
+      ]
+    },
+    {
+      multireg: {
+        name: "reg_pipeline_debug_ctrl",
+        desc: "input pipeline debug control register",
+        count: 3,
+        cname: "channel",
+        swaccess: "rw",
+        hwaccess: "hro",
+        resval: "0x80",
+        hwqe: "true",
+        fields: [
+          {bits: "0", name: "override", desc: "1 to override the delay value"},
+          {bits: "5:1", name: "delay", desc: "the delay value to set for the IDELAY primitive"},
+          {bits: "6", name: "bitslip", desc: "1 to force a bitslip operation"},
+          {bits: "10:7", name: "delay_increment", desc: "value to increment the delay by in automatic mode", resval: "0x01"}
+          {bits: "16:11", name: "empty", desc: "empty bits to avoid bugs with reggen tool"}
+        ]
+      }
+    },
+    {
+      name: "reg_channel_deskew_debug",
+      desc: "channel deskew debug register",
+      swaccess: "ro",
+      hwaccess: "hwo",
+      resval: 0,
+      fields: [
+        {bits: "0", name: "valid", desc: "1 if the channels can be synced"},
+        {bits: "2:1", name: "offset_r", desc: "offset of the red channel"},
+        {bits: "4:3", name: "offset_g", desc: "offset of the green channel"},
+        {bits: "6:5", name: "offset_b", desc: "offset of the blue channel"},
+        {bits: "9:7", name: "de", desc: "data enable signals"},
+        {bits: "31:10", name: "error_count", "desc": "number of skewing errors"}
+      ]
+    },
+    {
+      name: "reg_channel_deskew_debug_ctrl",
+      desc: "channel deskew debug control register",
+      swaccess: "rw",
+      hwaccess: "hro",
+      resval: 0,
+      fields: [
+        {bits: "0", name: "override", desc: "1 to override the offsets"},
+        {bits: "2:1", name: "offset_r", desc: "offset of the red channel"},
+        {bits: "4:3", name: "offset_g", desc: "offset of the green channel"},
+        {bits: "6:5", name: "offset_b", desc: "offset of the blue channel"}
+      ]
+    },
+    {
+      name: "reg_debug_pixel",
+      desc: "input pixel debug register",
+      swaccess: "ro",
+      hwaccess: "hwo",
+      resval: 0,
+      fields: [
+        {bits: "7:0", name: "red", desc: "red value of the last good pixel"},
+        {bits: "15:8", name: "green", desc: "green value of the last good pixel"},
+        {bits: "23:16", name: "blue", desc: "blue value of the last good pixel"}
+      ]
+    },
+    {
+      name: "reg_pixel_counter_debug",
+      desc: "input pixel position debug register",
+      swaccess: "ro",
+      hwaccess: "hwo",
+      resval: 0,
+      fields: [
+        {bits: "11:0", name: "cx", desc: "x position of the current pixel"},
+        {bits: "23:12", name: "cy", desc: "y position of the current pixel"},
+        {bits: "24", name: "is_video_data", desc: "1 if the current pixel is video data"},
+        {bits: "25", name: "is_hdmi", desc: "1 if the source send HDMI data, 0 if it sends DVI data"},
+        {bits: "26", name: "guessed_polarity", desc: "guessed polarity of the hsync and vsync signal"},
+      ]
+    },
+    {
+      name: "reg_pixel_counter_debug_ctrl",
+      desc: "pixel counter debug control register",
+      swaccess: "rw",
+      hwaccess: "hro",
+      resval: 0,
+      fields: [
+        {bits: "0", name: "override", desc: "1 to override the hdmi mode"},
+        {bits: "1", name: "is_hdmi", desc: "1 if the pixel counter should assume an HDMI signal, 0 to assume a DVI signal"},
+        {bits: "2", name: "hsync_polarity", desc: "HSYNC polarity"},
+        {bits: "3", name: "vsync_polarity", desc: "VSYNC polarity"}
+      ]
+    },
+    {
+      name: "reg_framebuffers_status",
+      desc: "framebuffer status register",
+      swaccess: "ro",
+      hwaccess: "hrw",
+      resval: 0,
+      hwre: "true",
+      hwext: "true",
+      fields: [
+        {bits: "1:0", name: "valid_frames", desc: "each bit shows which frame is valid"},
+        {bits: "13:2", name: "width", desc: "width of the received frame"},
+        {bits: "25:14", name: "height", desc: "height of the received frame"},
+        {bits: "31:26", name: "format", desc: "pixel format of the received frame"}
+      ]
+    },
+    {
+      name: "reg_framebuffers_control",
+      desc: "framebuffer control register",
+      swaccess: "rw",
+      hwaccess: "hro",
+      resval: 0,
+      fields: [
+        {bits: "1:0", name: "lock", desc: "set bit to 1 to lock the corresponding framebuffer"},
+        {bits: "5:2", name: "skip_row", desc: "framebuffer writes only every nth+1 row to memory"},
+        {bits: "9:6", name: "skip_column", desc: "framebuffer writes only every nth+1 column to memory"},
+        {bits: "10", name: "double_colordepth", desc: "merge both framebuffers to one with doubled colordepth (may not be set simultaneously with high_res)"},
+        {bits: "11", name: "high_res", desc: "merge both framebuffers to one with higher resolution (may not be set simultaneously with double_colordepth)"},
+      ]
+    },
+    {
+      name: "reg_clock_status",
+      desc: "DVI input clock status register",
+      swaccess: "ro",
+      hwaccess: "hrw",
+      resval: 0,
+      hwre: "true",
+      hwext: "true",
+      fields: [
+        {bits: "0", name: "locked", desc: "1 if the PLL is locked"},
+        {bits: "15:1", name: "pclk_counter", desc: "counter incrementing with the pixel clock"},
+        {bits: "30:16", name: "sys_clk_counter", desc: "counter incrementing with the system clock"},
+      ]
+    },
+    {
+      name: "reg_reset",
+      desc: "DVI input full reset register",
+      swaccess: "rw",
+      hwaccess: "hro",
+      resval: 0,
+      fields: [
+        {bits: "0", name: "rst", desc: "set bit to one to reset, set it to 0 to stop resetting"}
+      ]
+    }
+  ]
+}

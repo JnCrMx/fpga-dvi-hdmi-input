@@ -1,0 +1,85 @@
+{
+  name: "irq_ctrl"
+  clock_primary: "sys_clk"
+  bus_device: "tlul"
+  regwidth: "32"
+  registers: [
+    {
+      name: "all_en"
+      desc: "0: suppresses all outgoing interrupt requests"
+      swaccess: "rw"
+      hwaccess: "hro"
+      fields: [
+        {bits: "0:0", name: "all_en", desc: "all_en"}
+      ]
+    }
+    {
+      name: "mask"
+      desc: "mask(n) = 1 <=> irq(n) enabled"
+      swaccess: "rw"
+      hwaccess: "hrw"
+      fields: [
+        {bits: "31:0", name: "mask", desc: "mask"}
+      ]
+    }
+    {
+      name: "mask_set"
+      desc: "mask_set(n) = 1 <=> set bit n in mask"
+      swaccess: "wo"
+      hwaccess: "hro"
+      hwqe: "true"
+      fields:
+      [
+        {bits: "4:0", name: "mask_set", desc: "mask_set"}
+      ]
+    }
+    {
+      name: "mask_clr"
+      desc: "mask_clr(n) = 1 <=> clear bit n in mask"
+      swaccess: "wo"
+      hwaccess: "hro"
+      hwqe: "true"
+      fields:
+      [
+        {bits: "4:0", name: "mask_clr", desc: "mask_clr"}
+      ]
+    }
+    {
+      name: "status"
+      desc: "status(n) = 1 <=> irq(n) is asserted"
+      swaccess: "ro"
+      hwaccess: "hwo"
+      fields: [
+        {bits: "31:0", name: "status", desc: "status"}
+      ]
+    }
+    {
+      name: "irq_no"
+      desc: "n < IRQ_MAX: irq_no = n, irq(n) = 1 and there is no m < n with irq(m) = 1 and mask(m) = 1. n = IRQ_MAX: no pending unmasked irq"
+      swaccess: "ro"
+      hwaccess: "hwo"
+      fields:
+      [
+        {bits: "5:0", name: "irq_no", desc: "irq_no"}
+      ]
+    }
+    {
+      name: "test"
+      desc: "0: regular operation; 1: all irq inputs are wired to the test_irq register"
+      swaccess: "rw"
+      hwaccess: "hro"
+      fields: [
+        {bits: "0:0", name: "test", desc: "test"}
+      ]
+    }
+    {
+      name: "test_irq"
+      desc: "0: regular operation; 1: all irq inputs are wired to the test_irq register"
+      swaccess: "rw"
+      hwaccess: "hro"
+      fields: [
+        {bits: "31:0", name: "test_irq", desc: "test_irq"}
+      ]
+    }
+  ]
+}
